@@ -1,18 +1,71 @@
+import os
 import json
+import requests
+from datetime import datetime
 
-weather = {
-    "station": "제주(184)",
-    "temp": 31.4,
-    "feel": 34.8,
-    "humid": 73,
-    "wind": 4.2,
-    "dir": "남동",
-    "rain": 0,
-    "sky": "맑음",
-    "obsTime": "2026-07-28 14:00"
-}
+# ==========================
+# GitHub Secret에서 API Key 읽기
+# ==========================
 
-with open("weather.json", "w", encoding="utf-8") as f:
-    json.dump(weather, f, ensure_ascii=False, indent=4)
+API_KEY = os.environ["KMA_API_KEY"]
 
-print("weather.json 생성 완료")
+# ==========================
+# 제주 ASOS 관측소 번호
+# ==========================
+
+STN = 184
+
+# ==========================
+# ASOS 자료 요청
+# ==========================
+
+def get_weather():
+
+    url = "https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php"
+
+    today = datetime.now().strftime("%Y%m%d")
+
+    params = {
+
+        "tm1": today + "0000",
+        "tm2": today + "2359",
+
+        "stn": STN,
+
+        "help": "0",
+
+        "authKey": API_KEY
+
+    }
+
+    response = requests.get(
+
+        url,
+
+        params=params,
+
+        timeout=20
+
+    )
+
+    print(response.status_code)
+
+    lines = response.text.splitlines()
+
+    data = []
+
+    for line in lines:
+
+        # 주석(#)은 제외
+        if line.startswith("#"):
+            continue
+
+        # 빈 줄 제외
+        if not line.strip():
+            continue
+
+        data.append(line)
+
+    latest = data[-1]
+
+    print(latest)
