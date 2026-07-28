@@ -47,6 +47,7 @@ function loadGuide(){
     `📍 전시 ${current} / ${total}`;
 
     displayGuide(guide);
+    displayMission(guide);
 
 }
 
@@ -81,6 +82,22 @@ function displayGuide(guide){
     updateWeatherTip(guide);
 
     displayQuiz(guide);
+
+}
+
+function displayMission(guide){
+
+    if(!guide.mission){
+
+        return;
+
+    }
+
+    document.getElementById("missionTitle").innerHTML =
+    guide.mission.title;
+
+    document.getElementById("missionDesc").innerHTML =
+    guide.mission.description;
 
 }
 
