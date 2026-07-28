@@ -120,6 +120,15 @@ function updateWeatherTip(guide){
     const weather =
     loadWeather();
 
+    if(!weather){
+
+    document.getElementById("weatherTip").innerHTML =
+    guide.todayWeather.normal;
+
+    return;
+
+}
+
     let tip = "";
 
     if(weather.rain > 0 && guide.todayWeather.rainy){
