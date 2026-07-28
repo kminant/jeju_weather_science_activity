@@ -1,5 +1,4 @@
 import os
-import json
 import requests
 from datetime import datetime
 
@@ -10,62 +9,47 @@ from datetime import datetime
 API_KEY = os.environ["KMA_API_KEY"]
 
 # ==========================
-# 제주 ASOS 관측소 번호
+# API 주소
 # ==========================
 
-STN = 184
+URL = "https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php"
 
 # ==========================
-# ASOS 자료 요청
+# 오늘 날짜
 # ==========================
 
-def get_weather():
+today = datetime.now().strftime("%Y%m%d")
 
-    url = "https://apihub.kma.go.kr/api/typ01/url/kma_sfctm2.php"
+# ==========================
+# 요청 파라미터
+# ==========================
 
-    today = datetime.now().strftime("%Y%m%d")
+params = {
+    "tm1": today + "0000",
+    "tm2": today + "2359",
+    "stn": "184",          # 제주지방기상청
+    "help": "0",
+    "authKey": API_KEY
+}
 
-    params = {
+print("===== API 요청 시작 =====")
 
-        "tm1": today + "0000",
-        "tm2": today + "2359",
+response = requests.get(
+    URL,
+    params=params,
+    timeout=20
+)
 
-        "stn": STN,
+print("상태코드 :", response.status_code)
 
-        "help": "0",
+if response.status_code != 200:
+    raise Exception("API 호출 실패")
 
-        "authKey": API_KEY
+# ==========================
+# 응답 저장
+# ==========================
 
-    }
+with open("response.txt", "w", encoding="utf-8") as f:
+    f.write(response.text)
 
-    response = requests.get(
-
-        url,
-
-        params=params,
-
-        timeout=20
-
-    )
-
-    print(response.status_code)
-
-    lines = response.text.splitlines()
-
-    data = []
-
-    for line in lines:
-
-        # 주석(#)은 제외
-        if line.startswith("#"):
-            continue
-
-        # 빈 줄 제외
-        if not line.strip():
-            continue
-
-        data.append(line)
-
-    latest = data[-1]
-
-    print(latest)
+print("response.txt 저장 완료")
