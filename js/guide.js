@@ -371,16 +371,17 @@ if(cameraBtn && cameraInput){
 
     cameraInput.onchange = function(){
 
-        const file = this.files[0];
+    const file = this.files[0];
 
-        if(!file){
+    if(!file){
 
-            return;
+        return;
 
-        }
+    }
 
-        alert("📸 사진이 저장되었습니다!");
+    cameraBtn.innerHTML =
+    "✅ 사진 촬영 완료";
 
-    };
+    cameraBtn.disabled = true;
 
-}
+};
