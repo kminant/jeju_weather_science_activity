@@ -46,10 +46,41 @@ if response.status_code != 200:
     raise Exception("API 호출 실패")
 
 # ==========================
-# 응답 저장
+# 응답 분석
 # ==========================
 
-with open("response.txt", "w", encoding="utf-8") as f:
-    f.write(response.text)
+lines = response.text.splitlines()
 
-print("response.txt 저장 완료")
+data_line = ""
+
+for line in lines:
+
+    if line.startswith("#"):
+        continue
+
+    if not line.strip():
+        continue
+
+    data_line = line
+
+cols = data_line.split()
+
+weather = {
+
+    "station": "제주(184)",
+
+    "temp": float(cols[11]),
+
+    "feel": float(cols[29]),
+
+    "humid": float(cols[13]),
+
+    "wind": float(cols[3]),
+
+    "dir": int(cols[2]),
+
+    "rain": 0 if cols[15] == "-9.0" else float(cols[15]),
+
+    "obsTime": cols[0]
+
+}
