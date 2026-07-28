@@ -87,16 +87,25 @@ function displayGuide(guide){
 
 function displayMission(guide){
 
+    const title =
+    document.getElementById("missionTitle");
+
+    const desc =
+    document.getElementById("missionDesc");
+
     if(!guide.mission){
+
+        title.innerHTML="";
+        desc.innerHTML="";
 
         return;
 
     }
 
-    document.getElementById("missionTitle").innerHTML =
+    title.innerHTML=
     guide.mission.title;
 
-    document.getElementById("missionDesc").innerHTML =
+    desc.innerHTML=
     guide.mission.description;
 
 }
@@ -322,3 +331,41 @@ window.onload=function(){
     loadGuide();
 
 };
+
+/* ==========================================
+   추가 부분
+========================================== */
+
+/* ==========================================
+   사진 촬영
+========================================== */
+
+const cameraBtn =
+document.getElementById("cameraBtn");
+
+const cameraInput =
+document.getElementById("cameraInput");
+
+if(cameraBtn && cameraInput){
+
+    cameraBtn.onclick = ()=>{
+
+        cameraInput.click();
+
+    };
+
+    cameraInput.onchange = function(){
+
+        const file = this.files[0];
+
+        if(!file){
+
+            return;
+
+        }
+
+        alert("📸 사진이 저장되었습니다!");
+
+    };
+
+}
