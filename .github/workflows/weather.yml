@@ -1,0 +1,22 @@
+name: Update Weather
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install requests
+
+      - name: Run Python
+        env:
+          KMA_API_KEY: ${{ secrets.KMA_API_KEY }}
+        run: python scripts/update_weather.py
